@@ -27,13 +27,12 @@
 
   /* IMPORTANT: no dead gap — section grows to content until max-height */
   section.vi-embed{
-    display:flex;
-    flex-direction:column;
-    max-height:min(80vh, 760px);
-    overflow:hidden;
-    background:#fff;
-    border-radius:12px;
-  }
+  display:block !important;
+  max-height:none !important;
+  overflow:visible !important;
+  background:#fff;
+  border-radius:12px;
+}
 
   /* Header (always visible) */
   .head{
@@ -50,10 +49,8 @@
 
   /* Body scroll area (only scrolls when needed) */
   .wrap{
-    flex:1 1 auto;
-    min-height:0;            /* enables flex scrolling */
-    overflow:auto;
-    padding:10px 12px 12px;  /* NO footer reservation -> no dead gap */
+    overflow:visible !important;
+    padding:10px 12px 12px;
     background:#fff;
   }
   .wrap::-webkit-scrollbar{ width:10px; height:8px; }
