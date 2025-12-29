@@ -279,6 +279,31 @@
   .vi-footer{ display:none !important; }
   .wrap{ padding-bottom: 12px !important; } /* keeps spacing clean */
 }
+/* Desktop: show all 10 rows, no internal scrolling */
+@media (min-width: 641px){
+  section.vi-embed{
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .wrap{
+    overflow: visible !important;
+  }
+}
+/* Mobile: allow scrolling, and make footer part of the scroll (not sticky) */
+@media (max-width: 640px){
+  section.vi-embed{
+    display:block !important;      /* stop flex layout pinning header/footer */
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .wrap{
+    overflow: visible !important;  /* let the page scroll normally */
+  }
+
+  /* optional: tighten spacing a bit */
+  section.vi-embed{ margin:12px auto !important; }
+}
 </style>
 
 
