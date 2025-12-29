@@ -5,8 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Top 10 states — Jan Night-Sky events</title>
   <style>
-    /* Make the widget fill the iframe height exactly */
-    html, body { height: 100%; }
+    html, body { height:100%; }
     body { margin:0; background:#f7faf8; }
   </style>
 </head>
@@ -29,9 +28,9 @@
     --hover-tint: rgba(86,194,87,.12); --hover-ring:#BCE5D6; --hover-shadow:0 10px 24px rgba(86,194,87,.18);
   }
 
-  /* OUTER SHELL: fill iframe height, no page scrolling */
+  /* IMPORTANT: margin is 16px top/bottom => subtract 32px from 100vh so footer never clips */
   section.vi-embed{
-    height: 100vh;                 /* fills the iframe viewport */
+    height: calc(100vh - 32px);
     max-width:860px;
     margin:16px auto;
     border:1px solid #DCEFE6;
@@ -40,7 +39,7 @@
     box-shadow:0 1px 2px rgba(0,0,0,.04),0 6px 16px rgba(86,194,87,.10);
     display:flex;
     flex-direction:column;
-    overflow:hidden;               /* prevents footer cut + prevents iframe scroll */
+    overflow:hidden; /* keeps iframe clean (no outside scrollbars) */
   }
 
   /* Header */
@@ -56,10 +55,10 @@
   .title{margin:0 0 2px;font-size:clamp(16px,2.2vw,20px);line-height:1.2;font-weight:900;color:#fff!important}
   .sub{margin:0;color:rgba(255,255,255,.92)!important;font-size:12px}
 
-  /* SCROLL AREA: ONLY THIS SCROLLS */
+  /* SCROLL AREA */
   .wrap{
     flex:1 1 auto;
-    min-height:0;                 /* critical for flex children scrolling */
+    min-height:0;
     overflow:auto;
     padding:10px 12px 12px;
     background:#fff;
@@ -89,7 +88,7 @@
     transform:scale(1.01);box-shadow:var(--hover-shadow);border-color:var(--hover-ring)!important;
   }
   @media (max-width:640px){
-    section.vi-embed{ margin:12px auto; }
+    section.vi-embed{ margin:12px auto; height: calc(100vh - 24px); }
     .row{grid-template-columns:30px 1fr}
     .metric{grid-column:1 / -1}
   }
@@ -97,12 +96,7 @@
   .state{display:flex;align-items:flex-start;gap:10px;min-width:0}
   .state-lines{min-width:0}
   .state-name{margin:0;font-weight:950;font-size:clamp(14px,2vw,16px);line-height:1.1;color:var(--ink)}
-  .state-hint{
-    margin:3px 0 0;
-    font-size:12px;
-    font-weight:800;
-    color:rgba(31,93,40,.88) !important;
-  }
+  .state-hint{margin:3px 0 0;font-size:12px;font-weight:800;color:rgba(31,93,40,.88) !important;}
   .chip{
     width:26px;height:26px;border-radius:50%;overflow:hidden;border:1px solid #cfe4da;background:#fff;
     flex-shrink:0;margin-top:1px;box-shadow:0 1px 2px rgba(0,0,0,.04);
@@ -148,17 +142,8 @@
     background:#fff;border:1px solid var(--border);border-radius:999px;padding:6px 10px;
     font-size:11px;line-height:1.1;font-weight:800;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.06);white-space:nowrap;
   }
-  .details-close:hover{ border-color:var(--hover-ring); }
 
-  @media (max-width:520px){
-    .details-head{flex-direction:column;align-items:flex-start;}
-    .details-title{white-space:normal;}
-    .details-actions{width:100%;justify-content:flex-start;}
-    .swipe-hint{max-width:100%;}
-  }
-
-  /* Horizontal metrics scroller */
-  .ribbon-wrap{position:relative;}
+  /* Metrics ribbon */
   .metrics-ribbon{
     display:flex;gap:12px;overflow-x:auto;padding:6px 2px 10px;
     scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin;
@@ -166,18 +151,6 @@
   .metrics-ribbon::-webkit-scrollbar{height:10px}
   .metrics-ribbon::-webkit-scrollbar-thumb{background:#cfe4da;border-radius:999px}
   .metrics-ribbon::-webkit-scrollbar-track{background:transparent}
-
-  .ribbon-wrap::after{
-    content:"";position:absolute;top:0;right:0;bottom:0;width:56px;pointer-events:none;
-    background:linear-gradient(90deg, rgba(246,255,249,0) 0%, rgba(246,255,249,.85) 55%, rgba(246,255,249,1) 100%);
-    border-radius:12px;
-  }
-  .ribbon-chev{
-    position:absolute;right:10px;top:50%;transform:translateY(-50%);
-    width:26px;height:26px;border-radius:999px;border:1px solid var(--border);background:#fff;
-    display:grid;place-items:center;pointer-events:none;box-shadow:0 6px 14px rgba(0,0,0,.06);opacity:.9;
-  }
-  .ribbon-chev svg{width:16px;height:16px;stroke:var(--brand-700);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
   /* Metric cards */
   .mcard{
@@ -203,7 +176,7 @@
   .mini-bar{height:12px;border-radius:999px;background:#eef7f1;overflow:hidden;border:1px solid #e1efe7;align-self:end;}
   .mini-fill{height:100%;background:linear-gradient(90deg,var(--brand-600),var(--brand-500));border-radius:999px;}
 
-  /* Footer ALWAYS visible (inside the fixed-height widget) */
+  /* Footer */
   .vi-footer{
     flex:0 0 auto;
     text-align:center;
@@ -214,7 +187,6 @@
       linear-gradient(90deg,var(--brand-900) 0%,var(--brand-600) 45%,var(--brand-500) 100%)!important;
     color:#fff;
     position:relative;
-    overflow:visible;
   }
   .footer-inner{
     display:flex;
@@ -245,11 +217,12 @@
     filter:brightness(0) invert(1);
   }
 
+  /* Popup */
   .embed-wrapper{
-    position:absolute;
-    bottom:calc(100% + 10px);
+    position:fixed;
     left:50%;
     transform:translateX(-50%);
+    bottom:86px;
     width:min(640px, calc(100% - 24px));
     display:none;
     padding:16px 20px;
@@ -258,7 +231,7 @@
     background:#fff;
     color:#111;
     box-shadow:0 12px 28px rgba(0,0,0,.18);
-    z-index:1000;
+    z-index:99999;
   }
   .embed-wrapper::after{
     content:"";
@@ -281,14 +254,13 @@
     border-radius:8px;
     resize:none;
   }
-
-  /* FIX: your actual status id is top10-copy-status */
   #top10-copy-status{ display:none; color:#0a7a2b; font-size:13px; margin:8px 0 0; font-weight:700; }
 
   @media (max-width:640px){
     .embed-btn{ position:static; }
     .footer-inner{ justify-content:space-between; }
     .vi-footer img{ height:42px; }
+    .embed-wrapper{ bottom:96px; }
   }
 </style>
 
@@ -299,7 +271,7 @@
 
   <div class="wrap" id="top10-wrap">
 
-    <!-- ROWS (unchanged) -->
+    <!-- ✅ ROWS ARE HERE (this is what your blank screen was missing) -->
     <div class="row is-clickable" data-state="Alaska" aria-expanded="false" tabindex="0" role="button">
       <div class="rank">1</div>
       <div class="state">
@@ -464,157 +436,13 @@
 
       <div class="ribbon-wrap">
         <div id="top10-cards" class="metrics-ribbon" aria-label="Horizontal metrics scroller"></div>
-        <div class="ribbon-chev" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M10 7l5 5-5 5"/></svg>
-        </div>
       </div>
     </div>
 
-    <!-- DATA JSON (unchanged) -->
+    <!-- DATA JSON -->
     <script type="application/json" id="top10-data">[{"rank": 1, "state": "Alaska", "flag": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Alaska.svg", "prob": 27.42, "odds": "265", "metrics": {"fireball": {"value": 272.0, "pct": 0}, "pm25": {"value": 14.05, "pct": 0}, "humidity": {"value": 62.58, "pct": 75}, "cloud": {"value": 52.49, "pct": 73}, "brightness": {"value": 0.01, "pct": 100}, "darksky": {"value": 99.22, "pct": 100}, "radiant": {"value": 35.04, "pct": 95}, "moon": {"value": 10.64, "pct": 100}, "elev": {"value": 1900.0, "pct": 21}, "darkhours": {"value": 11.96, "pct": 100}}}, {"rank": 2, "state": "Colorado", "flag": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Colorado.svg", "prob": 25.85, "odds": "287", "metrics": {"fireball": {"value": 2290.0, "pct": 23}, "pm25": {"value": 6.48, "pct": 69}, "humidity": {"value": 72.48, "pct": 36}, "cloud": {"value": 47.94, "pct": 94}, "brightness": {"value": 0.12, "pct": 81}, "darksky": {"value": 93.52, "pct": 72}, "radiant": {"value": 28.95, "pct": 51}, "moon": {"value": 20.95, "pct": 14}, "elev": {"value": 6800.0, "pct": 100}, "darkhours": {"value": 11.07, "pct": 18}}}, {"rank": 3, "state": "Wyoming", "flag": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Wyoming.svg", "prob": 24.55, "odds": "307", "metrics": {"fireball": {"value": 235.0, "pct": 0}, "pm25": {"value": 3.13, "pct": 100}, "humidity": {"value": 81.78, "pct": 0}, "cloud": {"value": 63.9, "pct": 21}, "brightness": {"value": 0.03, "pct": 97}, "darksky": {"value": 98.72, "pct": 98}, "radiant": {"value": 30.27, "pct": 61}, "moon": {"value": 19.64, "pct": 25}, "elev": {"value": 6700.0, "pct": 98}, "darkhours": {"value": 11.21, "pct": 31}}}, {"rank": 4, "state": "Montana", "flag": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Montana.svg", "prob": 24.02, "odds": "316", "metrics": {"fireball": {"value": 647.0, "pct": 5}, "pm25": {"value": 7.02, "pct": 64}, "humidity": {"value": 68.87, "pct": 50}, "cloud": {"value": 60.53, "pct": 37}, "brightness": {"value": 0.03, "pct": 97}, "darksky": {"value": 98.54, "pct": 97}, "radiant": {"value": 31.28, "pct": 68}, "moon": {"value": 17.99, "pct": 39}, "elev": {"value": 3400.0, "pct": 45}, "darkhours": {"value": 11.36, "pct": 45}}}, {"rank": 5, "state": "New Mexico", "flag": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_New_Mexico.svg", "prob": 23.79, "odds": "320", "metrics": {"fireball": {"value": 715.0, "pct": 5}, "pm25": {"value": 5.44, "pct": 79}, "humidity": {"value": 64.36, "pct": 68}, "cloud": {"value": 48.45, "pct": 91}, "brightness": {"value": 0.09, "pct": 86}, "darksky": {"value": 94.76, "pct": 78}, "radiant": {"value": 25.55, "pct": 27}, "moon": {"value": 22.31, "pct": 3}, "elev": {"value": 5700.0, "pct": 82}, "darkhours": {"value": 10.91, "pct": 4}}}, {"rank": 6, "state": "Nevada", "flag": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Nevada.svg", "prob": 22.73, "odds": "340", "metrics": {"fireball": {"value": 773.0, "pct": 6}, "pm25": {"value": 5.9, "pct": 75}, "humidity": {"value": 73.08, "pct": 34}, "cloud": {"value": 59.03, "pct": 43}, "brightness": {"value": 0.07, "pct": 90}, "darksky": {"value": 96.42, "pct": 86}, "radiant": {"value": 30.35, "pct": 61}, "moon": {"value": 21.2, "pct": 12}, "elev": {"value": 5500.0, "pct": 79}, "darkhours": {"value": 11.04, "pct": 16}}}, {"rank": 7, "state": "Maine", "flag": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Maine.svg", "prob": 21.8, "odds": "359", "metrics": {"fireball": {"value": 936.0, "pct": 8}, "pm25": {"value": 5.01, "pct": 83}, "humidity": {"value": 72.97, "pct": 34}, "cloud": {"value": 59.86, "pct": 40}, "brightness": {"value": 0.1, "pct": 84}, "darksky": {"value": 94.14, "pct": 75}, "radiant": {"value": 35.79, "pct": 100}, "moon": {"value": 18.84, "pct": 32}, "elev": {"value": 600.0, "pct": 0}, "darkhours": {"value": 11.28, "pct": 38}}}, {"rank": 8, "state": "California", "flag": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_California.svg", "prob": 20.63, "odds": "385", "metrics": {"fireball": {"value": 9340.0, "pct": 100}, "pm25": {"value": 7.42, "pct": 61}, "humidity": {"value": 75.63, "pct": 24}, "cloud": {"value": 60.19, "pct": 38}, "brightness": {"value": 0.59, "pct": 0}, "darksky": {"value": 79.13, "pct": 0}, "radiant": {"value": 27.36, "pct": 40}, "moon": {"value": 21.93, "pct": 6}, "elev": {"value": 2900.0, "pct": 37}, "darkhours": {"value": 10.96, "pct": 8}}}, {"rank": 9, "state": "Arizona", "flag": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Arizona.svg", "prob": 20.16, "odds": "396", "metrics": {"fireball": {"value": 2321.0, "pct": 23}, "pm25": {"value": 10.79, "pct": 30}, "humidity": {"value": 56.21, "pct": 100}, "cloud": {"value": 46.53, "pct": 100}, "brightness": {"value": 0.16, "pct": 74}, "darksky": {"value": 92.9, "pct": 69}, "radiant": {"value": 21.79, "pct": 0}, "moon": {"value": 22.64, "pct": 0}, "elev": {"value": 4100.0, "pct": 56}, "darkhours": {"value": 10.87, "pct": 0}}}, {"rank": 10, "state": "Utah", "flag": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Utah.svg", "prob": 19.48, "odds": "413", "metrics": {"fireball": {"value": 964.0, "pct": 8}, "pm25": {"value": 7.83, "pct": 57}, "humidity": {"value": 76.79, "pct": 20}, "cloud": {"value": 68.64, "pct": 0}, "brightness": {"value": 0.08, "pct": 88}, "darksky": {"value": 95.4, "pct": 81}, "radiant": {"value": 26.06, "pct": 30}, "moon": {"value": 20.6, "pct": 17}, "elev": {"value": 6100.0, "pct": 89}, "darkhours": {"value": 11.11, "pct": 22}}}]</script>
 
     <script type="application/json" id="top10-metrics">[{"key":"fireball","label":"Reported Fireball Sightings","sub":"Past 5 years","better":"higher","icon":"<svg viewBox=\"0 0 24 24\"><path d=\"M20 6l-8 8\"/><path d=\"M7 21a4 4 0 0 1-4-4c0-4 6-9 10-9a4 4 0 0 1 4 4c0 4-5 10-10 10Z\"/><path d=\"M15 3l6 6\"/></svg>"},{"key":"pm25","label":"January Air Pollution (PM2.5)","sub":"µg/m³","better":"lower","icon":"<svg viewBox=\"0 0 24 24\"><path d=\"M3 8h10\"/><path d=\"M3 12h14\"/><path d=\"M3 16h18\"/><path d=\"M17 8h4\"/></svg>"},{"key":"humidity","label":"Avg. January Humidity","sub":"Monthly average","better":"lower","icon":"<svg viewBox=\"0 0 24 24\"><path d=\"M12 2s7 8 7 13a7 7 0 0 1-14 0c0-5 7-13 7-13Z\"/></svg>"},{"key":"cloud","label":"Avg. January Cloud Cover","sub":"Monthly average","better":"lower","icon":"<svg viewBox=\"0 0 24 24\"><path d=\"M3 12h18\"/><path d=\"M7 12a5 5 0 0 1 10 0\"/><path d=\"M7 16h10\"/></svg>"},{"key":"brightness","label":"Night-Sky Brightness","sub":"mcd/m² (statewide)","better":"lower","icon":"<svg viewBox=\"0 0 24 24\"><path d=\"M12 3v18\"/><path d=\"M5 7h14\"/><path d=\"M7 12h10\"/><path d=\"M9 17h6\"/></svg>"},{"key":"darksky","label":"Dark-Sky Coverage (Bortle 1–3)","sub":"Land area","better":"higher","icon":"<svg viewBox=\"0 0 24 24\"><path d=\"M12 2l3 7h7l-5.6 4.1L18.7 21 12 16.9 5.3 21l2.3-7.9L2 9h7z\"/></svg>"},{"key":"radiant","label":"Meteor Radiant Height","sub":"Avg. above horizon","better":"higher","icon":"<svg viewBox=\"0 0 24 24\"><path d=\"M12 2v6\"/><path d=\"M4 12h6\"/><path d=\"M14 12h6\"/><path d=\"M12 16v6\"/><path d=\"M8 8l8 8\"/><path d=\"M16 8l-8 8\"/></svg>"},{"key":"moon","label":"Moon Height After Moonrise","sub":"Avg. above horizon","better":"lower","icon":"<svg viewBox=\"0 0 24 24\"><path d=\"M21 12a9 9 0 1 1-9-9\"/><path d=\"M15 3a9 9 0 0 0 6 9\"/><path d=\"M3 18h18\"/></svg>"},{"key":"elev","label":"Avg. Elevation","sub":"Above sea level","better":"higher","icon":"<svg viewBox=\"0 0 24 24\"><path d=\"M3 19h18\"/><path d=\"M6 18l6-12 6 12\"/><path d=\"M9.5 14h5\"/></svg>"},{"key":"darkhours","label":"Fully Dark Night Hours","sub":"Avg. (Jan 2026)","better":"higher","icon":"<svg viewBox=\"0 0 24 24\"><path d=\"M8 7h8\"/><path d=\"M7 11h10\"/><path d=\"M6 15h12\"/><path d=\"M5 19h14\"/></svg>"}]</script>
-
-    <script>
-      (function(){
-        const wrap   = document.getElementById("top10-wrap");
-        const rows   = wrap.querySelectorAll('.row.is-clickable[data-state]');
-        const panel  = document.getElementById("top10-details");
-        const cards  = document.getElementById("top10-cards");
-        const title  = document.getElementById("top10-details-title");
-        const closeB = document.getElementById("top10-close");
-
-        const DATA = JSON.parse(document.getElementById("top10-data").textContent);
-        const METRICS = JSON.parse(document.getElementById("top10-metrics").textContent);
-
-        const byState = Object.create(null);
-        DATA.forEach(d => byState[d.state] = d);
-
-        function fmt(key, val){
-          if(val === null || val === undefined) return "—";
-          const n = Number(val);
-          if(["humidity","cloud","darksky"].includes(key)) return n.toFixed(2) + "%";
-          if(key === "brightness") return n.toFixed(2);
-          if(["radiant","moon"].includes(key)) return n.toFixed(2) + "°";
-          if(key === "elev") return Math.round(n).toLocaleString() + " ft";
-          if(key === "pm25") return n.toFixed(2);
-          if(key === "darkhours") return n.toFixed(2);
-          if(key === "fireball") return Math.round(n).toLocaleString();
-          return String(val);
-        }
-
-        function cardHTML(m, vObj){
-          const betterText = (m.better === "lower") ? "Lower is better" : "Higher is better";
-          const pct = (vObj && typeof vObj.pct === "number") ? vObj.pct : 0;
-          const raw = (vObj && vObj.value != null) ? vObj.value : null;
-
-          return `
-            <div class="mcard">
-              <div class="mhead">
-                <div class="icon" aria-hidden="true">${m.icon}</div>
-                <div>
-                  <p class="mlabel">${m.label}</p>
-                  <p class="mvalue">${fmt(m.key, raw)}</p>
-                  <p class="msub">${m.sub}</p>
-                </div>
-              </div>
-              <div class="pill">${betterText}</div>
-              <div class="mini-bar"><div class="mini-fill" style="width:${pct}%;"></div></div>
-            </div>
-          `;
-        }
-
-        function renderState(stateName){
-          const d = byState[stateName];
-          if(!d) return;
-          title.textContent = `${d.state} — Jan Night-Sky Viewing Factors`;
-          cards.innerHTML = METRICS.map(m => cardHTML(m, d.metrics[m.key])).join("");
-        }
-
-        function openUnderRow(row){
-          const state = row.dataset.state;
-          row.after(panel);
-
-          rows.forEach(r => r.setAttribute('aria-expanded','false'));
-          row.setAttribute('aria-expanded','true');
-
-          panel.classList.add('open');
-          panel.setAttribute('aria-hidden','false');
-
-          renderState(state);
-          panel.scrollIntoView({block:'nearest', behavior:'smooth'});
-        }
-
-        function closePanel(){
-          panel.classList.remove('open');
-          panel.setAttribute('aria-hidden','true');
-          rows.forEach(r => r.setAttribute('aria-expanded','false'));
-        }
-
-        rows.forEach(row=>{
-          row.addEventListener('click', ()=>{
-            const isExpanded  = row.getAttribute('aria-expanded') === 'true';
-            const panelIsOpen = panel.classList.contains('open');
-            if(isExpanded && panelIsOpen) closePanel();
-            else openUnderRow(row);
-          });
-
-          row.addEventListener('keydown', (e)=>{
-            if(e.key==='Enter' || e.key===' '){
-              e.preventDefault();
-              const isExpanded  = row.getAttribute('aria-expanded') === 'true';
-              const panelIsOpen = panel.classList.contains('open');
-              if(isExpanded && panelIsOpen) closePanel();
-              else openUnderRow(row);
-            }
-          });
-        });
-
-        if(closeB) closeB.addEventListener('click', (e)=>{ e.stopPropagation(); closePanel(); });
-        document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && panel.classList.contains('open')) closePanel(); });
-
-        // ---- Embed button copy behavior ----
-        const btn     = document.getElementById('top10-copy-embed-btn');
-        const wrapper = document.getElementById('top10-embed-wrapper');
-        const ta      = document.getElementById('top10-embed-code');
-        const status  = document.getElementById('top10-copy-status');
-
-        if (btn && wrapper && ta && status) {
-          btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const isHidden = (wrapper.style.display === 'none' || wrapper.style.display === '');
-            wrapper.style.display = isHidden ? 'block' : 'none';
-            btn.textContent = isHidden ? 'Hide embed code' : '🔗 Embed This Table';
-            btn.setAttribute('aria-expanded', String(isHidden));
-            if (isHidden) {
-              ta.focus();
-              ta.select();
-              try { document.execCommand('copy'); } catch(e) {}
-              status.style.display = 'block';
-              setTimeout(() => status.style.display = 'none', 2500);
-            }
-          });
-
-          document.addEventListener('click', (e)=>{
-            const open = wrapper.style.display === 'block';
-            if (open && !wrapper.contains(e.target) && !btn.contains(e.target)) {
-              wrapper.style.display = 'none';
-              btn.setAttribute('aria-expanded','false');
-              btn.textContent = '🔗 Embed This Table';
-            }
-          });
-
-          document.addEventListener('keydown', (e)=>{
-            if (e.key === 'Escape' && wrapper.style.display === 'block') {
-              wrapper.style.display = 'none';
-              btn.setAttribute('aria-expanded','false');
-              btn.textContent = '🔗 Embed This Table';
-              btn.focus();
-            }
-          });
-        }
-      })();
-    </script>
 
   </div><!-- /wrap -->
 
@@ -628,16 +456,179 @@
 
       <div id="top10-embed-wrapper" class="embed-wrapper" aria-label="Embed code popup">
         <textarea id="top10-embed-code" readonly>&lt;iframe
-  src="https://gauthambc.github.io/Jan_night_sky_events/top_10.html"
   title="Top 10 states — Jan Night-Sky events"
-  width="100%" height="760"
-  style="border:0;overflow:hidden;display:block;" scrolling="no"&gt;&lt;/iframe&gt;</textarea>
+  src="https://gauthambc.github.io/Jan_night_sky_events/top_10.html"
+  width="100%"
+  height="700"
+  scrolling="no"
+  style="border:0; overflow:hidden; display:block; width:100%;"
+  loading="lazy"&gt;&lt;/iframe&gt;</textarea>
         <p id="top10-copy-status">Embed code copied!</p>
       </div>
     </div>
   </div>
 
 </section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const wrap   = document.getElementById("top10-wrap");
+    const rows   = wrap ? wrap.querySelectorAll('.row.is-clickable[data-state]') : [];
+    const panel  = document.getElementById("top10-details");
+    const cards  = document.getElementById("top10-cards");
+    const title  = document.getElementById("top10-details-title");
+    const closeB = document.getElementById("top10-close");
+
+    const dataEl = document.getElementById("top10-data");
+    const metricsEl = document.getElementById("top10-metrics");
+    const DATA = dataEl ? JSON.parse(dataEl.textContent) : [];
+    const METRICS = metricsEl ? JSON.parse(metricsEl.textContent) : [];
+
+    const byState = Object.create(null);
+    DATA.forEach(d => byState[d.state] = d);
+
+    function fmt(key, val){
+      if(val === null || val === undefined) return "—";
+      const n = Number(val);
+      if(["humidity","cloud","darksky"].includes(key)) return n.toFixed(2) + "%";
+      if(key === "brightness") return n.toFixed(2);
+      if(["radiant","moon"].includes(key)) return n.toFixed(2) + "°";
+      if(key === "elev") return Math.round(n).toLocaleString() + " ft";
+      if(key === "pm25") return n.toFixed(2);
+      if(key === "darkhours") return n.toFixed(2);
+      if(key === "fireball") return Math.round(n).toLocaleString();
+      return String(val);
+    }
+
+    function cardHTML(m, vObj){
+      const betterText = (m.better === "lower") ? "Lower is better" : "Higher is better";
+      const pct = (vObj && typeof vObj.pct === "number") ? vObj.pct : 0;
+      const raw = (vObj && vObj.value != null) ? vObj.value : null;
+
+      return `
+        <div class="mcard">
+          <div class="mhead">
+            <div class="icon" aria-hidden="true">${m.icon}</div>
+            <div>
+              <p class="mlabel">${m.label}</p>
+              <p class="mvalue">${fmt(m.key, raw)}</p>
+              <p class="msub">${m.sub}</p>
+            </div>
+          </div>
+          <div class="pill">${betterText}</div>
+          <div class="mini-bar"><div class="mini-fill" style="width:${pct}%;"></div></div>
+        </div>
+      `;
+    }
+
+    function renderState(stateName){
+      const d = byState[stateName];
+      if(!d) return;
+      if(title) title.textContent = `${d.state} — Jan Night-Sky Viewing Factors`;
+      if(cards) cards.innerHTML = METRICS.map(m => cardHTML(m, d.metrics[m.key])).join("");
+    }
+
+    function openUnderRow(row){
+      if(!panel) return;
+      const state = row.dataset.state;
+      row.after(panel);
+
+      rows.forEach(r => r.setAttribute('aria-expanded','false'));
+      row.setAttribute('aria-expanded','true');
+
+      panel.classList.add('open');
+      panel.setAttribute('aria-hidden','false');
+
+      renderState(state);
+      panel.scrollIntoView({block:'nearest', behavior:'smooth'});
+    }
+
+    function closePanel(){
+      if(!panel) return;
+      panel.classList.remove('open');
+      panel.setAttribute('aria-hidden','true');
+      rows.forEach(r => r.setAttribute('aria-expanded','false'));
+    }
+
+    rows.forEach(row=>{
+      row.addEventListener('click', ()=>{
+        const isExpanded  = row.getAttribute('aria-expanded') === 'true';
+        const panelIsOpen = panel && panel.classList.contains('open');
+        if(isExpanded && panelIsOpen) closePanel();
+        else openUnderRow(row);
+      });
+
+      row.addEventListener('keydown', (e)=>{
+        if(e.key==='Enter' || e.key===' '){
+          e.preventDefault();
+          const isExpanded  = row.getAttribute('aria-expanded') === 'true';
+          const panelIsOpen = panel && panel.classList.contains('open');
+          if(isExpanded && panelIsOpen) closePanel();
+          else openUnderRow(row);
+        }
+      });
+    });
+
+    if(closeB) closeB.addEventListener('click', (e)=>{ e.stopPropagation(); closePanel(); });
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && panel && panel.classList.contains('open')) closePanel(); });
+
+    // ---- Embed button ----
+    const btn     = document.getElementById('top10-copy-embed-btn');
+    const wrapper = document.getElementById('top10-embed-wrapper');
+    const ta      = document.getElementById('top10-embed-code');
+    const status  = document.getElementById('top10-copy-status');
+
+    async function copyText(text){
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+          return true;
+        }
+      } catch (_) {}
+      try {
+        ta.focus();
+        ta.select();
+        return document.execCommand('copy');
+      } catch (_) {
+        return false;
+      }
+    }
+
+    if (btn && wrapper && ta && status) {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const willOpen = (wrapper.style.display === 'none' || wrapper.style.display === '');
+        wrapper.style.display = willOpen ? 'block' : 'none';
+        btn.textContent = willOpen ? 'Hide embed code' : '🔗 Embed This Table';
+        btn.setAttribute('aria-expanded', String(willOpen));
+
+        if (willOpen) {
+          const ok = await copyText(ta.value);
+          status.style.display = ok ? 'block' : 'none';
+          setTimeout(() => status.style.display = 'none', 2500);
+        }
+      });
+
+      document.addEventListener('click', (e)=>{
+        const open = wrapper.style.display === 'block';
+        if (open && !wrapper.contains(e.target) && !btn.contains(e.target)) {
+          wrapper.style.display = 'none';
+          btn.setAttribute('aria-expanded','false');
+          btn.textContent = '🔗 Embed This Table';
+        }
+      });
+
+      document.addEventListener('keydown', (e)=>{
+        if (e.key === 'Escape' && wrapper.style.display === 'block') {
+          wrapper.style.display = 'none';
+          btn.setAttribute('aria-expanded','false');
+          btn.textContent = '🔗 Embed This Table';
+          btn.focus();
+        }
+      });
+    }
+  });
+</script>
 
 </body>
 </html>
