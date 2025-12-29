@@ -277,6 +277,11 @@
     .footer-inner{ justify-content:space-between; }
     .vi-footer img{ height:42px; }
   }
+  /* Hide footer on mobile to avoid awkward extra space */
+@media (max-width: 640px){
+  .vi-footer{ display:none !important; }
+  .wrap{ padding-bottom: 12px !important; } /* keeps spacing clean */
+}
 </style>
 
 
